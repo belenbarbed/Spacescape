@@ -3,23 +3,34 @@ import random
 import serial
 import struct
 import time
+import signal, sys
 
 # assuming 6 resistors
 NUM_RESISTORS = 6
 
 resistors = ['130', '8000', '200', '2400', '4000', '120']
 
+ser = None
+
+def signal_handler(sig, frame):
+    print('handling! quit')
+    global ser
+    ser.close()
+    sys.exit(0)
+
+signal.signal(signal.SIGINT, signal_handler)
+
 def resistorPuzzle(debug=False):
     # change ACM number as found from ls /dev/tty/ACM*
-    # ser = serial.Serial("/dev/ttyACM0", 9600)
+    global ser
+    ser = serial.Serial("/dev/ttyACM0", 9600)
     # for MAC only:
-    ser = serial.Serial("/dev/tty.usbmodemFB0001", 9600)
-
+    # ser = serial.Serial("/dev/tty.usbmodemFB0001", 9600)
+    time.sleep(0.6)
     ser.baudrate = 9600
-
-    ser.write(b'reset\n')
-    time.sleep(2)
-
+    
+    sleep = 1
+    
     # pick 2 random resistors
     resistor1 = random.randint(0,NUM_RESISTORS-1)
     resistor2 = random.randint(0,NUM_RESISTORS-1)
@@ -34,11 +45,18 @@ def resistorPuzzle(debug=False):
 
     if debug:
         print('Code: {}'.format(code))
-
+    #ser.write_timeout = 0.01
+    
+    for i in range(0,10):
+        ser.write(b'banter\n')
+    
+    ser.write(b'reset\n1\n2\n')
+    
     ser.write((str(resistor1)+'\n').encode())
-    time.sleep(2)
+    #time.sleep(sleep)
     ser.write((str(resistor2)+'\n').encode())
-    time.sleep(2)
+    #time.sleep(sleep)
+    #ser.write(b'reset\n3\n5\n')
     if debug:
         print('Values sent')
 

@@ -23,9 +23,9 @@ def resistorPuzzle(debug=False):
     global ser
 
     # for raspberry pi (as found from ls /dev/tty/ACM*)
-    # ser = serial.Serial("/dev/ttyACM0", 9600)
+    ser = serial.Serial("/dev/ttyACM0", baudrate=9600, timeout=0.1)
     # for MAC only:
-    ser = serial.Serial("/dev/tty.usbmodemFB0001", baudrate=9600, timeout=0.1)
+    #ser = serial.Serial("/dev/tty.usbmodemFB0001", baudrate=9600, timeout=0.1)
 
     # need sleep here to set up serial (mac = 2, pi = 0.6)
     ser.write(b'reset\n')

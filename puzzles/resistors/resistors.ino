@@ -10,8 +10,9 @@ void setup() {
     for(int i = 0; i < sizeof(LEDS); i++) {
         pinMode(LEDS[i], OUTPUT);
     }
-	reset();
-	Serial.begin(9600);
+    reset();
+    Serial.begin(9600);
+    Serial.setTimeout(50);
 }
 
 void loop() {

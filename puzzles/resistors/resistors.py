@@ -13,7 +13,6 @@ resistors = ['130', '8000', '200', '2400', '4000', '120']
 ser = None
 
 def signal_handler(sig, frame):
-    print('handling! quit')
     global ser
     ser.close()
     sys.exit(0)
@@ -21,16 +20,20 @@ def signal_handler(sig, frame):
 signal.signal(signal.SIGINT, signal_handler)
 
 def resistorPuzzle(debug=False):
-    # change ACM number as found from ls /dev/tty/ACM*
     global ser
-    ser = serial.Serial("/dev/ttyACM0", 9600)
+
+    # for raspberry pi (as found from ls /dev/tty/ACM*)
+    # ser = serial.Serial("/dev/ttyACM0", 9600)
     # for MAC only:
-    # ser = serial.Serial("/dev/tty.usbmodemFB0001", 9600)
-    time.sleep(0.6)
-    ser.baudrate = 9600
-    
-    sleep = 1
-    
+    ser = serial.Serial("/dev/tty.usbmodemFB0001", baudrate=9600, timeout=0.1)
+
+    # need sleep here to set up serial (mac = 2, pi = 0.6)
+    ser.write(b'reset\n')
+    read_ser = ser.readline()
+    while read_ser != b'reset\r\n':
+        ser.write(b'reset\n')
+        read_ser = ser.readline()
+
     # pick 2 random resistors
     resistor1 = random.randint(0,NUM_RESISTORS-1)
     resistor2 = random.randint(0,NUM_RESISTORS-1)
@@ -45,18 +48,10 @@ def resistorPuzzle(debug=False):
 
     if debug:
         print('Code: {}'.format(code))
-    #ser.write_timeout = 0.01
-    
-    for i in range(0,10):
-        ser.write(b'banter\n')
-    
-    ser.write(b'reset\n1\n2\n')
-    
+
     ser.write((str(resistor1)+'\n').encode())
-    #time.sleep(sleep)
     ser.write((str(resistor2)+'\n').encode())
-    #time.sleep(sleep)
-    #ser.write(b'reset\n3\n5\n')
+
     if debug:
         print('Values sent')
 
@@ -82,10 +77,12 @@ def resistorPuzzle(debug=False):
         print(char, end='', flush=True)
         time.sleep(0.1)
 
+    ser.close()
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='The resistor puzzle.')
-    parser.add_argument('-d', '--debug', default=False, action='store_true', dest='debug', help='enable debug mode')
+    parser.add_argument('-d', '--debug', default=False, action='store_true',
+        dest='debug', help='enable debug mode')
     args = parser.parse_args()
 
     resistorPuzzle(debug=args.debug)

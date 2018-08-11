@@ -23,7 +23,7 @@ void loop() {
             if(incoming == "reset") {
                 reset();
                 Serial.println("reset");
-            } else if (lit < NUM_RESISTORS) {
+            } else {
                 int led = incoming.toInt();
                 addLit(led);
             }

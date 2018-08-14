@@ -8,93 +8,93 @@ WIDTH = 40
 TIMEOUT = 30
 
 def sig_handler(sig, frame):
-	curses.endwin()
-	sys.exit(0)
+    curses.endwin()
+    sys.exit(0)
 
 signal.signal(signal.SIGINT, sig_handler)
 
 class Player():
-	def __init__(self):
-		self.x = int(WIDTH/2)
-		self.y = HEIGHT-2
+    def __init__(self):
+        self.x = int(WIDTH/2)
+        self.y = HEIGHT-2
 
-	def left(self):
-		if self.x > 0:
-			self.x -= 1
+    def left(self):
+        if self.x > 1:
+            self.x -= 1
 
-	def right(self):
-		if self.x < WIDTH:
-			self.x += 1
+    def right(self):
+        if self.x < WIDTH-2:
+            self.x += 1
 
 class Asteroid():
-	def __init__(self):
-		self.x = randint(1, WIDTH-2)
-		self.y = 0
-		self.exist = True
+    def __init__(self):
+        self.x = randint(1, WIDTH-2)
+        self.y = 0
+        self.exist = True
 
-	def fall(self):
-		if self.y < HEIGHT-1:
-			self.y += 1
-		else:
-			self.exist = False
+    def fall(self):
+        if self.y < HEIGHT-1:
+            self.y += 1
+        else:
+            self.exist = False
 
 
 def hit(player, asteroid):
-	if player.x == asteroid.x and player.y == asteroid.y:
-		return True
-	return False
+    if player.x == asteroid.x and player.y == asteroid.y:
+        return True
+    return False
 
 
 def main():
-	timeout = time.time() + TIMEOUT
-	curses.initscr()
-	win = curses.newwin(HEIGHT, WIDTH, 0, 0)
-	win.keypad(1)
-	curses.noecho()
-	curses.curs_set(0)
-	win.border(0)
-	win.nodelay(1)
-	
-	player = Player()
-	win.addch(player.y, player.x, '^')
+    timeout = time.time() + TIMEOUT
+    curses.initscr()
+    win = curses.newwin(HEIGHT, WIDTH, 0, 0)
+    win.keypad(1)
+    curses.noecho()
+    curses.curs_set(0)
+    win.border(0)
+    win.nodelay(1)
 
-	key = None
-	asteroids = []
+    player = Player()
+    win.addch(player.y, player.x, '^')
 
-	curr_time = time.time()
+    key = None
+    asteroids = []
 
-	while True:
-		if time.time() > timeout:
-			break
-		win.border(0)
-		win.addstr(0, 0, 'Time Left : {:.2f} '.format(timeout-time.time()))
-		#win.timeout(int(time.time()-timeout))
+    curr_time = time.time()
 
-		event = win.getch()
-		key = None if event == -1 else event 
+    while True:
+        if time.time() > timeout:
+            break
+        win.border(0)
+        win.addstr(0, 0, 'Time Left : {:.2f} '.format(timeout-time.time()))
+        #win.timeout(int(time.time()-timeout))
 
-		if key == ord('a'):
-			player.left()
-			win.addch(player.y, player.x, '^')
-			win.addch(player.y, player.x+1, ' ')
-		elif key == ord('d'):
-			player.right()
-			win.addch(player.y, player.x, '^')
-			win.addch(player.y, player.x-1, ' ')
+        event = win.getch()
+        key = None if event == -1 else event
 
-		if time.time() > curr_time+1:
-			aster = Asteroid()
-			asteroids.append(aster)
-			for asteroid in asteroids:
-				asteroid.fall()
-				if asteroid.exist:
-					win.addch(asteroid.y, asteroid.x, '@')
-					win.addch(asteroid.y-1, asteroid.x, ' ')
-				if hit(player, asteroid):
-					win.addch(asteroid.y, asteroid.x, '*')
-			curr_time = time.time()
-		
-	curses.endwin()
+        if key == ord('a'):
+            player.left()
+            win.addch(player.y, player.x, '^')
+            win.addch(player.y, player.x+1, ' ')
+        elif key == ord('d'):
+            player.right()
+            win.addch(player.y, player.x, '^')
+            win.addch(player.y, player.x-1, ' ')
+
+        if time.time() > curr_time+1:
+            aster = Asteroid()
+            asteroids.append(aster)
+            for asteroid in asteroids:
+                asteroid.fall()
+                if asteroid.exist:
+                    win.addch(asteroid.y, asteroid.x, '@')
+                    win.addch(asteroid.y-1, asteroid.x, ' ')
+                if hit(player, asteroid):
+                    win.addch(asteroid.y, asteroid.x, '*')
+            curr_time = time.time()
+
+    curses.endwin()
 
 if __name__ == '__main__':
-	main()
+    main()

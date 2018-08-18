@@ -2,6 +2,7 @@ from random import randint
 import curses
 import time
 import sys, signal
+import pygame
 
 from inspect import getsourcefile
 import os.path as path, sys
@@ -13,9 +14,11 @@ sys.path.pop(0)
 
 HEIGHT = 10
 WIDTH = 40
-TIMEOUT = 30
+TIMEOUT = 35
 SPEED = 1.0
 RATE = 0.60
+
+#hit_sound = pygame.mixer.Sound('hit.wav')
 
 def sig_handler(sig, frame):
     curses.endwin()
@@ -68,14 +71,22 @@ class Asteroid():
 def hit(player, asteroid):
     # FIXME: player disappears when hitting asteroid sideways
     if player.x == asteroid.x and player.y == asteroid.y:
+        #pygame.mixer.Sound.play(hit_sound)
+        #pygame.mixer.music.stop()
         asteroid.exist = False
         player.die()
         return True
     return False
 
 
-def main():
+def asteroids():
+    #pygame.mixer.pre_init(44100, 16, 2, 4096) #frequency, size, channels, buffersize
+    #pygame.mixer.init()
+    #pygame.init() #turn all of pygame on.
+
     clearScreen()
+    #pygame.mixer.music.load('moon.wav')
+    #pygame.mixer.music.play(1)
 
     printOut('--- WARNING! ---\nESCAPE POD NOW ENTERING HIGHLY DENSE ASTEROID FIELD')
     printOut('MANUAL NAVIGATION REQUIRED')
@@ -153,4 +164,4 @@ def main():
     printOut('POD WAS HIT {} TIMES'.format(player.deaths()))
 
 if __name__ == '__main__':
-    main()
+    asteroids()

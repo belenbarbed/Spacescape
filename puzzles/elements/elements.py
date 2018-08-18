@@ -1,18 +1,20 @@
 from mendeleev import element
 import random
 import re
-import argparsei
+import argparse
 
 from inspect import getsourcefile
 import os.path as path, sys
 current_dir = path.dirname(path.abspath(getsourcefile(lambda:0)))
 sys.path.insert(0, current_dir[:current_dir.rfind(path.sep)])
-from utils import printOut
+from utils import printOut, clearScreen
 sys.path.pop(0)
 
 
 def elementPuzzle(debug=False):
-    with open('words.txt', 'r') as f:
+    clearScreen()
+
+    with open('puzzles/elements/words.txt', 'r') as f:
         words = [line.strip() for line in f]
 
     # word to use for code

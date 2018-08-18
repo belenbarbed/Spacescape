@@ -9,7 +9,7 @@ from inspect import getsourcefile
 import os.path as path, sys
 current_dir = path.dirname(path.abspath(getsourcefile(lambda:0)))
 sys.path.insert(0, current_dir[:current_dir.rfind(path.sep)])
-from utils import printOut
+from utils import printOut, clearScreen
 sys.path.pop(0)
 
 
@@ -28,6 +28,8 @@ def signal_handler(sig, frame):
 signal.signal(signal.SIGINT, signal_handler)
 
 def resistorPuzzle(debug=False):
+    clearScreen()
+
     global ser
 
     # for raspberry pi (as found from ls /dev/tty/ACM*)
@@ -80,8 +82,7 @@ def resistorPuzzle(debug=False):
         time.sleep(0.5)
     print('Complete!')
 
-    message = 'Engine Status:\tOK\nHyperdrive:\tONLINE\nLife Support:\tLIMITED - ? mins remaining\n'
-    printOut(message)
+    printOut('Engine Status:\tOK\nHyperdrive:\tONLINE\nLife Support:\tLIMITED - ? mins remaining')
 
     ser.close()
 

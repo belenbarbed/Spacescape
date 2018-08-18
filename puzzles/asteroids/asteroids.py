@@ -7,7 +7,7 @@ from inspect import getsourcefile
 import os.path as path, sys
 current_dir = path.dirname(path.abspath(getsourcefile(lambda:0)))
 sys.path.insert(0, current_dir[:current_dir.rfind(path.sep)])
-from utils import printOut
+from utils import printOut, clearScreen
 sys.path.pop(0)
 
 
@@ -75,6 +75,8 @@ def hit(player, asteroid):
 
 
 def main():
+    clearScreen()
+
     printOut('--- WARNING! ---\nESCAPE POD NOW ENTERING HIGHLY DENSE ASTEROID FIELD')
     printOut('MANUAL NAVIGATION REQUIRED')
     printOut('ENTERING FIELD IN')
@@ -145,6 +147,8 @@ def main():
             interval = time.time()
 
     curses.endwin()
+
+    clearScreen()
     printOut('NAVIGATION THROUGH ASTEROID FIELD COMPLETE...')
     printOut('POD WAS HIT {} TIMES'.format(player.deaths()))
 

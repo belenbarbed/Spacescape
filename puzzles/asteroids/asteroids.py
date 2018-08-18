@@ -3,11 +3,19 @@ import curses
 import time
 import sys, signal
 
+from inspect import getsourcefile
+import os.path as path, sys
+current_dir = path.dirname(path.abspath(getsourcefile(lambda:0)))
+sys.path.insert(0, current_dir[:current_dir.rfind(path.sep)])
+from utils import printOut
+sys.path.pop(0)
+
+
 HEIGHT = 10
 WIDTH = 40
 TIMEOUT = 30
 SPEED = 1.0
-RATE = 0.65
+RATE = 0.60
 
 def sig_handler(sig, frame):
     curses.endwin()
@@ -67,6 +75,13 @@ def hit(player, asteroid):
 
 
 def main():
+    printOut('--- WARNING! ---\nESCAPE POD NOW ENTERING HIGHLY DENSE ASTEROID FIELD')
+    printOut('MANUAL NAVIGATION REQUIRED')
+    printOut('ENTERING FIELD IN')
+    for i in [3, 2, 1]:
+        print(i)
+        time.sleep(1)
+
     timeout = time.time() + TIMEOUT
     speed = SPEED
     curses.initscr()
@@ -130,6 +145,8 @@ def main():
             interval = time.time()
 
     curses.endwin()
+    printOut('NAVIGATION THROUGH ASTEROID FIELD COMPLETE...')
+    printOut('POD WAS HIT {} TIMES'.format(player.deaths()))
 
 if __name__ == '__main__':
     main()

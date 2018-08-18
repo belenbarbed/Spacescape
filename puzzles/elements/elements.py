@@ -1,7 +1,15 @@
 from mendeleev import element
 import random
 import re
-import argparse
+import argparsei
+
+from inspect import getsourcefile
+import os.path as path, sys
+current_dir = path.dirname(path.abspath(getsourcefile(lambda:0)))
+sys.path.insert(0, current_dir[:current_dir.rfind(path.sep)])
+from utils import printOut
+sys.path.pop(0)
+
 
 def elementPuzzle(debug=False):
     with open('words.txt', 'r') as f:
@@ -9,7 +17,8 @@ def elementPuzzle(debug=False):
 
     # word to use for code
     word = words[random.randint(0, len(words))]
-    print('-- ACCESS POD MAINFRAME --\nUser: ' + word.upper())
+    printOut('--- ACCESS POD MAINFRAME ---')
+    print('User: ' + word.upper())
 
     elements = re.findall(r'([A-Z][a-z]*)', word)
 

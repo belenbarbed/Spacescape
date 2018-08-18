@@ -5,6 +5,14 @@ import struct
 import time
 import signal, sys
 
+from inspect import getsourcefile
+import os.path as path, sys
+current_dir = path.dirname(path.abspath(getsourcefile(lambda:0)))
+sys.path.insert(0, current_dir[:current_dir.rfind(path.sep)])
+from utils import printOut
+sys.path.pop(0)
+
+
 # assuming 6 resistors
 NUM_RESISTORS = 6
 
@@ -65,7 +73,7 @@ def resistorPuzzle(debug=False):
     attempt = ''
     while attempt != code:
         attempt = input('Enter repair code: ')
-    
+
     print('Repair code accepted, pod systems now repairing', end='')
     for i in range(5):
         print('.', end='', flush=True)
@@ -73,9 +81,7 @@ def resistorPuzzle(debug=False):
     print('Complete!')
 
     message = 'Engine Status:\tOK\nHyperdrive:\tONLINE\nLife Support:\tLIMITED - ? mins remaining\n'
-    for char in message:
-        print(char, end='', flush=True)
-        time.sleep(0.1)
+    printOut(message)
 
     ser.close()
 

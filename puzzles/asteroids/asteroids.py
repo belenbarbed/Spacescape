@@ -12,13 +12,12 @@ from utils import printOut, clearScreen
 sys.path.pop(0)
 
 
-HEIGHT = 10
-WIDTH = 40
+HEIGHT = 20
+WIDTH = 80
 TIMEOUT = 35
 SPEED = 1.0
 RATE = 0.60
 
-#hit_sound = pygame.mixer.Sound('hit.wav')
 
 def sig_handler(sig, frame):
     curses.endwin()
@@ -68,25 +67,24 @@ class Asteroid():
             self.exist = False
 
 
-def hit(player, asteroid):
+def hit(player, asteroid, sound=None):
     # FIXME: player disappears when hitting asteroid sideways
     if player.x == asteroid.x and player.y == asteroid.y:
-        #pygame.mixer.Sound.play(hit_sound)
-        #pygame.mixer.music.stop()
+        if sound:
+            pygame.mixer.Sound.play(sound)
         asteroid.exist = False
-        player.die()
+        if player.getIcon() == '^':
+            player.die()
         return True
     return False
 
 
 def asteroids():
-    #pygame.mixer.pre_init(44100, 16, 2, 4096) #frequency, size, channels, buffersize
-    #pygame.mixer.init()
-    #pygame.init() #turn all of pygame on.
+    pygame.mixer.init()
+    pygame.init() #turn all of pygame on.
+    hit_sound = pygame.mixer.Sound('hit.wav')
 
     clearScreen()
-    #pygame.mixer.music.load('moon.wav')
-    #pygame.mixer.music.play(1)
 
     printOut('--- WARNING! ---\nESCAPE POD NOW ENTERING HIGHLY DENSE ASTEROID FIELD')
     printOut('MANUAL NAVIGATION REQUIRED')
@@ -95,6 +93,9 @@ def asteroids():
         print(i)
         time.sleep(1)
 
+    pygame.mixer.music.load('moon.wav')
+    pygame.mixer.music.play(-1)
+    
     timeout = time.time() + TIMEOUT
     speed = SPEED
     curses.initscr()
@@ -109,11 +110,12 @@ def asteroids():
     win.addch(player.y, player.x, player.getIcon())
 
     key = None
+    
     asteroids = []
 
     interval = time.time()
     curr_time = time.time()
-
+    
     while True:
         if time.time() > timeout:
             break
@@ -124,16 +126,16 @@ def asteroids():
         win.addstr(0, 0, 'Time Left : {:.2f} '.format(timeout-time.time()))
         win.addstr(HEIGHT-1, WIDTH-13, 'Speed : {:.2f}'.format(speed))
         win.addstr(HEIGHT-1, 1, 'Deaths : {} '.format(player.deaths()))
-        #win.timeout(int(time.time()-timeout))
 
         event = win.getch()
         key = None if event == -1 else event
+        
 
         if key == ord('a'):
             player.left()
             win.addch(player.y, player.x, player.getIcon())
             win.addch(player.y, player.x+1, ' ')
-        elif key == ord('d'):
+        if key == ord('d'):
             player.right()
             win.addch(player.y, player.x, player.getIcon())
             win.addch(player.y, player.x-1, ' ')
@@ -148,7 +150,7 @@ def asteroids():
             for asteroid in asteroids:
                 asteroid.fall()
                 if asteroid.exist:
-                    if hit(player, asteroid):
+                    if hit(player, asteroid, hit_sound):
                         player.setIcon('*')
                         win.addch(player.y, player.x, player.getIcon())
                         win.addch(asteroid.y-1, asteroid.x, ' ')
@@ -158,10 +160,11 @@ def asteroids():
             interval = time.time()
 
     curses.endwin()
+    pygame.mixer.music.fadeout(2000)
 
     clearScreen()
     printOut('NAVIGATION THROUGH ASTEROID FIELD COMPLETE...')
-    printOut('POD WAS HIT {} TIMES'.format(player.deaths()))
+    printOut('POD WAS HIT {} TIME{}'.format(player.deaths()), '' if player.deaths()==1 else 'S')
 
 if __name__ == '__main__':
     asteroids()

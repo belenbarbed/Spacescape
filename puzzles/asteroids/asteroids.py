@@ -164,7 +164,7 @@ def asteroids():
 
     clearScreen()
     printOut('NAVIGATION THROUGH ASTEROID FIELD COMPLETE...')
-    printOut('POD WAS HIT {} TIME{}'.format(player.deaths()), '' if player.deaths()==1 else 'S')
+    printOut('POD WAS HIT {} TIME{}'.format(player.deaths(), '' if player.deaths()==1 else 'S'))
 
 if __name__ == '__main__':
     asteroids()

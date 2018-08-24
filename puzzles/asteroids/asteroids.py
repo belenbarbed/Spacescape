@@ -79,7 +79,7 @@ def hit(player, asteroid, sound=None):
     return False
 
 
-def asteroids():
+def asteroidPuzzle():
     pygame.mixer.init()
     pygame.init() #turn all of pygame on.
     hit_sound = pygame.mixer.Sound('hit.wav')
@@ -167,4 +167,4 @@ def asteroids():
     printOut('POD WAS HIT {} TIME{}'.format(player.deaths(), '' if player.deaths()==1 else 'S'))
 
 if __name__ == '__main__':
-    asteroids()
+    asteroidPuzzle()

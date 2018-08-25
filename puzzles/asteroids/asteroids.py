@@ -2,20 +2,21 @@ from random import randint
 import curses
 import time
 import sys, signal
+import argparse
 import pygame
 
 from inspect import getsourcefile
 import os.path as path, sys
 current_dir = path.dirname(path.abspath(getsourcefile(lambda:0)))
 sys.path.insert(0, current_dir[:current_dir.rfind(path.sep)])
-from utils import printOut, clearScreen
+from utils import printOut, clearScreen, disableButton
 sys.path.pop(0)
 
 HEIGHT = 20
 WIDTH = 80
-TIMEOUT = 35
+TIMEOUT = 50
 SPEED = 1.0
-RATE = 0.60
+RATE = 0.70
 
 def sig_handler(sig, frame):
     curses.endwin()
@@ -77,7 +78,11 @@ def hit(player, asteroid, sound=None):
     return False
 
 
-def asteroidPuzzle(debug=False):
+def asteroidPuzzle(gametime, debug=False):
+    # Disable buttons while printing
+    if not debug:
+        disableButton()
+
     pygame.mixer.init()
     pygame.init() #turn all of pygame on.
     hit_sound = pygame.mixer.Sound('puzzles/asteroids/hit.wav')
@@ -85,12 +90,13 @@ def asteroidPuzzle(debug=False):
     clearScreen()
 
     printOut('--- WARNING! ---\nESCAPE POD NOW ENTERING HIGHLY DENSE ASTEROID FIELD')
-    printOut('MANUAL NAVIGATION REQUIRED')
+    printOut('MAIN MONITOR DISABLED TO CONSERVE POWER FOR EVASIVE MANEUVERS\nMANUAL NAVIGATION REQUIRED')
     printOut('ENTERING FIELD IN')
     for i in [3, 2, 1]:
         print(i)
         time.sleep(1)
-
+    
+    clearScreen()
     pygame.mixer.music.load('puzzles/asteroids/moon.wav')
     pygame.mixer.music.play(-1)
     
@@ -113,7 +119,11 @@ def asteroidPuzzle(debug=False):
 
     interval = time.time()
     curr_time = time.time()
-    
+
+    # Enable buttons
+    if not debug:
+        disableButton(False)
+
     while True:
         if time.time() > timeout:
             break
@@ -144,8 +154,10 @@ def asteroidPuzzle(debug=False):
 
         if time.time() > interval + speed:
             win.addch(player.y, player.x, player.getIcon())
-            aster = Asteroid()
-            asteroids.append(aster)
+            first = Asteroid()
+            asteroids.append(first)
+            second = Asteroid()
+            asteroids.append(second)
             for asteroid in asteroids:
                 asteroid.fall()
                 if asteroid.exist:
@@ -161,9 +173,17 @@ def asteroidPuzzle(debug=False):
     curses.endwin()
     pygame.mixer.music.fadeout(2000)
 
+    # Disable buttons
+    if not debug:
+        disableButton()
+
     clearScreen()
     printOut('NAVIGATION THROUGH ASTEROID FIELD COMPLETE...')
     printOut('POD WAS HIT {} TIME{}'.format(player.deaths(), '' if player.deaths()==1 else 'S'))
+    printOut('--- POD STATUS ---')
+    m, s = divmod(gametime-time.time(), 60)
+    printOut('ENGINE STATUS:\tOK\nHYPERDRIVE:\tOFFLINE\nLIFE SUPPORT:\tLIMITED - {:.0f} MINUTES {:.0f} SECONDS REMAINING'.format(m, s))
+
     return player.deaths()
 
 if __name__ == "__main__":
@@ -172,4 +192,4 @@ if __name__ == "__main__":
         help='enable debug mode')
     args = parser.parse_args()
 
-    asteroidPuzzle(debug=args.debug)
+    asteroidPuzzle(gametime=time.time()+300, debug=args.debug)

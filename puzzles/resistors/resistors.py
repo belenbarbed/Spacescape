@@ -9,14 +9,14 @@ from inspect import getsourcefile
 import os.path as path, sys
 current_dir = path.dirname(path.abspath(getsourcefile(lambda:0)))
 sys.path.insert(0, current_dir[:current_dir.rfind(path.sep)])
-from utils import printOut, clearScreen
+from utils import printOut, clearScreen, disableKeys
 sys.path.pop(0)
 
 
 # assuming 6 resistors
 NUM_RESISTORS = 6
 
-resistors = ['130', '8000', '200', '2400', '4000', '120']
+resistors = ['93', '5100', '4400', '470', '8000', '85000']
 
 ser = None
 
@@ -27,13 +27,13 @@ def signal_handler(sig, frame):
 
 signal.signal(signal.SIGINT, signal_handler)
 
-def resistorPuzzle(debug=False):
+def resistorPuzzle(gametime, debug=False):
     clearScreen()
 
     global ser
 
     # for raspberry pi (as found from ls /dev/tty/ACM*)
-    ser = serial.Serial("/dev/ttyACM0", baudrate=9600, timeout=0.1)
+    ser = serial.Serial("/dev/ttyUSB0", baudrate=9600, timeout=0.1)
     # for MAC only:
     #ser = serial.Serial("/dev/tty.usbmodemFB0001", baudrate=9600, timeout=0.1)
 
@@ -74,21 +74,50 @@ def resistorPuzzle(debug=False):
                 print('Arduino ready, LEDs lit')
             break
 
-    attempt = ''
-    while attempt != code1 and attempt != code2:
-        attempt = input('Enter one repair code: ')
-    remaining = code2 if attempt == code1 else code1
-    attempt = ''
-    while attempt != remaining:
-        attempt = input('Enter another repair code: ')
-
-    print('Repair code accepted, pod systems now repairing', end='')
+    printOut('--- WARNING ---')
+    printOut('ENGINE DAMAGED DUE TO ASTEROID COLLISION')
+    printOut('ATTEMPTING AUTOMATIC REPAIR')
     for i in range(5):
         print('.', end='', flush=True)
         time.sleep(0.5)
-    print('Complete!')
+    printOut(' AUTOMATIC REPAIR FAILED!')
+    printOut('MANUAL OVERRIDE REQUIRED')
 
-    printOut('Engine Status:\tOK\nHyperdrive:\tONLINE\nLife Support:\tLIMITED - ? mins remaining')
+    # Enable numpad
+    if not debug:
+        disableKeys(False)
+
+    attempt = ''
+    while attempt != code1 and attempt != code2:
+        attempt = input('ENTER ENGINE REPAIR CODE 1/2: ')
+    remaining = code2 if attempt == code1 else code1
+    if attempt == code1:
+        ser.write((str(resistor1)+'ok\n').encode())
+    else:
+        ser.write((str(resistor2)+'ok\n').encode())
+    
+    attempt = ''
+    while attempt != remaining:
+        attempt = input('ENTER ENGINE REPAIR CODE 2/2: ')
+    if attempt == code1:
+        ser.write((str(resistor1)+'ok\n').encode())
+    else:
+        ser.write((str(resistor2)+'ok\n').encode())
+
+    # Disable numpad
+    if not debug:
+        disableKeys()
+    clearScreen()
+
+    printOut('REPAIR CODES ACCEPTED, ENGINE NOW REPAIRING')
+    for i in range(5):
+        print('.', end='', flush=True)
+        time.sleep(0.5)
+    printOut(' COMPLETE!')
+
+    printOut('--- POD STATUS ---')
+    m, s = divmod(gametime-time.time(), 60)
+    printOut('ENGINE STATUS:\tOK\nHYPERDRIVE:\tONLINE\nLIFE SUPPORT:\tLIMITED - {:.0f} MINUTES {:.0f} SECONDS REMAINING'.format(m, s))
 
     ser.close()
 
@@ -98,4 +127,4 @@ if __name__ == '__main__':
         dest='debug', help='enable debug mode')
     args = parser.parse_args()
 
-    resistorPuzzle(debug=args.debug)
+    resistorPuzzle(gametime=time.time()+300, debug=args.debug)

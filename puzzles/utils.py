@@ -1,7 +1,9 @@
 import time
 import os
+import subprocess
 
-DELAY = 0.1
+DELAY = 0.05
+DEVICE_ID = '7'
 
 def printOut(message):
     for char in message:
@@ -11,3 +13,15 @@ def printOut(message):
 
 def clearScreen():
     os.system('clear')
+
+def disableButton(true=True):
+    if true:
+        subprocess.call(['sudo', 'systemctl', 'stop', 'gpioneer'])
+    else:
+        subprocess.call(['sudo', 'systemctl', 'start', 'gpioneer'])
+
+def disableKeys(true=True):
+    if true:
+        subprocess.call(['xinput', 'disable', DEVICE_ID])
+    else:
+        subprocess.call(['xinput', 'enable', DEVICE_ID])

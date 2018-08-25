@@ -40,7 +40,8 @@ def elementPuzzle(debug=False):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='The periodic table puzzle.')
-    parser.add_argument('-d', '--debug', default=False, action='store_true', dest='debug', help='enable debug mode')
+    parser.add_argument('-d', '--debug', default=False, action='store_true', dest='debug',
+        help='enable debug mode')
     args = parser.parse_args()
 
     elementPuzzle(debug=args.debug)

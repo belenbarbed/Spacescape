@@ -164,10 +164,12 @@ def asteroidPuzzle(debug=False):
     clearScreen()
     printOut('NAVIGATION THROUGH ASTEROID FIELD COMPLETE...')
     printOut('POD WAS HIT {} TIME{}'.format(player.deaths(), '' if player.deaths()==1 else 'S'))
+    return player.deaths()
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='The asteroids minigame.')
-    parser.add_argument('-d', '--debug', default=False, action='store_true', dest='debug', help='enable debug mode')
+    parser.add_argument('-d', '--debug', default=False, action='store_true', dest='debug',
+        help='enable debug mode')
     args = parser.parse_args()
 
     asteroidPuzzle(debug=args.debug)

@@ -54,10 +54,12 @@ def resistorPuzzle(debug=False):
     if debug:
         print('Resistor 1: {}\nResistor 2: {}'.format(resistor1, resistor2))
 
-    code = resistors[resistor1] + resistors[resistor2]
+    code1 = resistors[resistor1]
+    code2 = resistors[resistor2]
 
     if debug:
-        print('Code: {}'.format(code))
+        print('Code 1: {}'.format(code1))
+        print('Code 2: {}'.format(code2))
 
     ser.write((str(resistor1)+'\n').encode())
     ser.write((str(resistor2)+'\n').encode())
@@ -73,8 +75,12 @@ def resistorPuzzle(debug=False):
             break
 
     attempt = ''
-    while attempt != code:
-        attempt = input('Enter repair code: ')
+    while attempt != code1 and attempt != code2:
+        attempt = input('Enter one repair code: ')
+    remaining = code2 if attempt == code1 else code1
+    attempt = ''
+    while attempt != remaining:
+        attempt = input('Enter another repair code: ')
 
     print('Repair code accepted, pod systems now repairing', end='')
     for i in range(5):

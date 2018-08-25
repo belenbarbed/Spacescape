@@ -41,7 +41,7 @@ def main(debug=False):
     # TODO: open video of asteroids approaching
 
     # 2nd PUZZLE: asteroid avoiding minigame (asteroids.py)
-    asteroidPuzzle(debug)
+    deaths = asteroidPuzzle(debug)
 
     # puzzle returns = puzzle passed
 

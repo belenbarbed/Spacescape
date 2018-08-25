@@ -1,56 +1,76 @@
 import argparse
+import time
+import signal, sys
 
+# puzzles
 from asteroids import asteroids
 from elements import elements
 from resistors import resistors
+
 from utils import printOut, clearScreen
+
+# ^C handler
+def signal_handler(sig, frame):
+    sys.exit(0)
+
+signal.signal(signal.SIGINT, signal_handler)
 
 # main function
 def main(debug=False):
     clearScreen()
 
-    # TODO: reset all puzzles (?)
-
     # TODO: open video of space in top of screen
 
-    # TODO: user settles down and presses numpad 'enter' to start
+    # user settles down and presses numpad 'enter' to start
     input('Press enter to start')
+    time.sleep(1)
+    clearScreen()
+    printOut('--- WELCOME ON BOARD! ---')
 
     # TODO: open video of escape and crash
-    if debug:
-        print('')
 
     # TODO: start countdown
 
     # TODO: open video of traversing space
 
-    # TODO: 1st PUZZLE: login (elements.py)
-
-    # puzzle returns = puzzle passed
-
-    # TODO: 2nd PUZZLE: repair codes (resistors.py)
+    # 1st PUZZLE: login (elements.py)
+    elements.elementPuzzle(debug)
 
     # puzzle returns = puzzle passed
 
     # TODO: open video of asteroids approaching
 
-    # TODO: 3rd PUZZLE: asteroid avoiding minigame (asteroids.py)
+    # 2nd PUZZLE: asteroid avoiding minigame (asteroids.py)
+    asteroids.asteroidPuzzle()
 
     # puzzle returns = puzzle passed
 
     # TODO: discount time depending on no. of deaths
 
-    # TODO: open video of traversing space (or landing??)
+    # TODO: open video of traversing space
+
+    # 3rd PUZZLE: repair codes (resistors.py)
+    resistors.resistorPuzzle(debug)
+
+    # puzzle returns = puzzle passed
+
+    # TODO: open video of landing
 
     # TODO: stop countdown
 
     # TODO: tell user they passed!
 
-    # TODO: user presses numpad 'enter' to open bay door
+    # user presses numpad 'enter' to open bay door
+    clearScreen()
+    printOut('--- PRESS ENTER TO OPEN BAY DOORS ---')
+    input('')
 
     # TODO: open door electromagnets
 
-    # TODO: reset all puzzles (?)
+    # TODO: reset all puzzles + timer display
+
+    # Wait for user to leave
+    time.sleep(30)
 
 
 if __name__ == "__main__":

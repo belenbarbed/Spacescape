@@ -11,13 +11,11 @@ sys.path.insert(0, current_dir[:current_dir.rfind(path.sep)])
 from utils import printOut, clearScreen
 sys.path.pop(0)
 
-
 HEIGHT = 20
 WIDTH = 80
 TIMEOUT = 35
 SPEED = 1.0
 RATE = 0.60
-
 
 def sig_handler(sig, frame):
     curses.endwin()
@@ -82,7 +80,7 @@ def hit(player, asteroid, sound=None):
 def asteroidPuzzle():
     pygame.mixer.init()
     pygame.init() #turn all of pygame on.
-    hit_sound = pygame.mixer.Sound('hit.wav')
+    hit_sound = pygame.mixer.Sound('asteroids/hit.wav')
 
     clearScreen()
 
@@ -93,7 +91,7 @@ def asteroidPuzzle():
         print(i)
         time.sleep(1)
 
-    pygame.mixer.music.load('moon.wav')
+    pygame.mixer.music.load('asteroids/moon.wav')
     pygame.mixer.music.play(-1)
     
     timeout = time.time() + TIMEOUT

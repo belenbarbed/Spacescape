@@ -3,9 +3,9 @@ import time
 import signal, sys
 
 # puzzles
-from asteroids import asteroids
-from elements import elements
-from resistors import resistors
+from puzzles.asteroids.asteroids import asteroidPuzzle
+from puzzles.elements.elements import elementPuzzle
+from puzzles.resistors.resistors import resistorPuzzle
 
 from utils import printOut, clearScreen
 
@@ -34,14 +34,14 @@ def main(debug=False):
     # TODO: open video of traversing space
 
     # 1st PUZZLE: login (elements.py)
-    elements.elementPuzzle(debug)
+    elementPuzzle(debug)
 
     # puzzle returns = puzzle passed
 
     # TODO: open video of asteroids approaching
 
     # 2nd PUZZLE: asteroid avoiding minigame (asteroids.py)
-    asteroids.asteroidPuzzle()
+    asteroidPuzzle(debug)
 
     # puzzle returns = puzzle passed
 
@@ -50,7 +50,7 @@ def main(debug=False):
     # TODO: open video of traversing space
 
     # 3rd PUZZLE: repair codes (resistors.py)
-    resistors.resistorPuzzle(debug)
+    resistorPuzzle(debug)
 
     # puzzle returns = puzzle passed
 

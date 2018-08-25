@@ -77,10 +77,10 @@ def hit(player, asteroid, sound=None):
     return False
 
 
-def asteroidPuzzle():
+def asteroidPuzzle(debug=False):
     pygame.mixer.init()
     pygame.init() #turn all of pygame on.
-    hit_sound = pygame.mixer.Sound('asteroids/hit.wav')
+    hit_sound = pygame.mixer.Sound('puzzles/asteroids/hit.wav')
 
     clearScreen()
 
@@ -91,7 +91,7 @@ def asteroidPuzzle():
         print(i)
         time.sleep(1)
 
-    pygame.mixer.music.load('asteroids/moon.wav')
+    pygame.mixer.music.load('puzzles/asteroids/moon.wav')
     pygame.mixer.music.play(-1)
     
     timeout = time.time() + TIMEOUT
@@ -122,8 +122,9 @@ def asteroidPuzzle():
             curr_time = time.time()
         win.border(0)
         win.addstr(0, 0, 'Time Left : {:.2f} '.format(timeout-time.time()))
-        win.addstr(HEIGHT-1, WIDTH-13, 'Speed : {:.2f}'.format(speed))
         win.addstr(HEIGHT-1, 1, 'Deaths : {} '.format(player.deaths()))
+        if debug:
+            win.addstr(HEIGHT-1, WIDTH-13, 'Speed : {:.2f}'.format(speed))
 
         event = win.getch()
         key = None if event == -1 else event
@@ -164,5 +165,9 @@ def asteroidPuzzle():
     printOut('NAVIGATION THROUGH ASTEROID FIELD COMPLETE...')
     printOut('POD WAS HIT {} TIME{}'.format(player.deaths(), '' if player.deaths()==1 else 'S'))
 
-if __name__ == '__main__':
-    asteroidPuzzle()
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description='The asteroids minigame.')
+    parser.add_argument('-d', '--debug', default=False, action='store_true', dest='debug', help='enable debug mode')
+    args = parser.parse_args()
+
+    asteroidPuzzle(debug=args.debug)

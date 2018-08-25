@@ -14,7 +14,7 @@ sys.path.pop(0)
 def elementPuzzle(debug=False):
     clearScreen()
 
-    with open('elements/words.txt', 'r') as f:
+    with open('puzzles/elements/words.txt', 'r') as f:
         words = [line.strip() for line in f]
 
     # word to use for code

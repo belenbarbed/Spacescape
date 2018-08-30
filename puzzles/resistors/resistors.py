@@ -16,7 +16,7 @@ sys.path.pop(0)
 # assuming 6 resistors
 NUM_RESISTORS = 6
 
-resistors = ['93', '5100', '4400', '470', '8000', '85000']
+resistors = ['33000', '5100', '4400', '470', '8000', '85000']
 
 ser = None
 

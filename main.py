@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+
 import argparse
 import time
 import signal, sys
@@ -24,6 +26,7 @@ def main(debug=False):
     clearScreen()
     if not debug:
         disableButton()
+        os.system("./numlock.sh")
 
     # TODO: open video of space in top of screen
     os.system("omxplayer --no-keys --no-osd -o local /opt/vc/src/hello_pi/hello_video/test.h264 --win '0 0 1080 960' > /dev/null &")

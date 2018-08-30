@@ -35,11 +35,11 @@ void loop() {
 }
 
 void closeDoor() {
-    digitalWrite(DOOR, HIGH);
+    digitalWrite(DOOR, LOW);
 }
 
 void openDoor() {
-    digitalWrite(DOOR, LOW);
+    digitalWrite(DOOR, HIGH);
 }
 
 void reset() {

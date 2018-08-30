@@ -182,7 +182,7 @@ def asteroidPuzzle(gametime, debug=False):
     printOut('POD WAS HIT {} TIME{}'.format(player.deaths(), '' if player.deaths()==1 else 'S'))
     printOut('--- POD STATUS ---')
     m, s = divmod(gametime-time.time(), 60)
-    printOut('ENGINE STATUS:\tOK\nHYPERDRIVE:\tOFFLINE\nLIFE SUPPORT:\tLIMITED - {:.0f} MINUTES {:.0f} SECONDS REMAINING'.format(m, s))
+    printOut('ENGINE STATUS:\tOK\nHYPERDRIVE:\tOFFLINE\nLIFE SUPPORT:\tLIMITED - {:.0f} MINUTES {} SECONDS REMAINING'.format(m, int(s)))
 
     return player.deaths()
 

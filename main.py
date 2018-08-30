@@ -15,6 +15,13 @@ from utils import printOut, clearScreen, disableButton, disableKeys
 
 TIME = 5 # Game time in minutes
 
+# TODO: videos
+start = '/opt/vc/src/hello_pi/hello_video/test.h264'
+journey = '/opt/vc/src/hello_pi/hello_video/test.h264'
+crash = '/opt/vc/src/hello_pi/hello_video/test.h264'
+asteroids = '/opt/vc/src/hello_pi/hello_video/test.h264'
+landing = '/opt/vc/src/hello_pi/hello_video/test.h264'
+
 # ^C handler
 def signal_handler(sig, frame):
     sys.exit(0)
@@ -28,31 +35,34 @@ def main(debug=False):
         disableButton()
         os.system("./numlock.sh")
 
-    # TODO: open video of space in top of screen
-    os.system("omxplayer --no-keys --no-osd -o local /opt/vc/src/hello_pi/hello_video/test.h264 --win '0 0 1080 960' > /dev/null &")
+    # open video of space in top of screen (in parallel)
+    os.system("omxplayer --no-keys --no-osd -o local " + start + " --win '0 0 1080 960' > /dev/null &")
 
     # user settles down and presses numpad 'enter' to start
     input('PRESS ENTER TO LAUNCH')
     if not debug:
         disableKeys()
     time.sleep(1)
+
+    # TODO: close door electromagnets
+
     clearScreen()
     printOut('--- WELCOME ON BOARD ---')
     printOut('POD NOW LAUNCHING...')
     time.sleep(2)
     clearScreen()
 
-    # TODO: open video of escape and crash
-    os.system("omxplayer --no-osd /opt/vc/src/hello_pi/hello_video/test.h264 --win '0 0 1080 960' > /dev/null")
+    # open video of escape and crash (blocking)
+    os.system("omxplayer --no-osd " + crash + " --win '0 0 1080 960' > /dev/null")
     printOut('SYSTEMS DAMAGED DUE TO ASTEROID COLLISION')
     
-    # TODO: open video of traversing space
-    os.system("omxplayer --no-keys --no-osd -o local /opt/vc/src/hello_pi/hello_video/test.h264 --win '0 0 1080 960' > /dev/null &")
+    # open video of traversing space (in parallel)
+    os.system("omxplayer --no-keys --no-osd -o local " + journey + " --win '0 0 1080 960' > /dev/null &")
 
     # start countdown
     timeout = time.time() + (TIME * 60)
     m, s = divmod(timeout-time.time(), 60)
-    printOut('LIFE SUPPORT DAMAGED: {:.0f} MINUTES {:.0f} SECONDS REMAINING'.format(m, s))
+    printOut('LIFE SUPPORT DAMAGED: {:.0f} MINUTES {} SECONDS REMAINING'.format(m, int(s)))
     printOut('PLEASE FOLLOW INSTRUCTIONS TO ENSURE SURVIVAL')
     time.sleep(2)
 
@@ -60,45 +70,42 @@ def main(debug=False):
     elementPuzzle(timeout, debug)
     time.sleep(2)
 
-    # puzzle returns = puzzle passed
-
-    # TODO: open video of asteroids approaching
+    # open video of asteroids approaching
+    os.system("omxplayer --no-keys --no-osd -o local " + asteroids + " --win '0 0 1080 960' > /dev/null &")
     
     # TODO: turn off main monitor
 
     # 2nd PUZZLE: asteroid avoiding minigame (asteroids.py)
     deaths = asteroidPuzzle(timeout, debug)
 
-    # puzzle returns = puzzle passed
-
-    # TODO: discount time depending on no. of deaths
+    # discount time depending on no. of deaths
     if deaths >= 1:
         timeout -= 10
         if deaths >= 2:
             timeout -= deaths * 5
         printOut('LIFE SUPPORT DAMAGED BY ASTEROID COLLISION')
         m, s = divmod(timeout-time.time(), 60)
-        printOut('{:.0f} MINUTES {:.0f} SECONDS REMAINING'.format(m, s)) 
+        printOut('{:.0f} MINUTES {} SECONDS REMAINING'.format(m, int(s)))
     time.sleep(2)
 
-    # TODO: open video of traversing space
+    # open video of traversing space (in parallel)
+    os.system("omxplayer --no-keys --no-osd -o local " + journey + " --win '0 0 1080 960' > /dev/null &")
 
     # 3rd PUZZLE: repair codes (resistors.py)
     resistorPuzzle(timeout, debug)
     time.sleep(2)
 
-    # puzzle returns = puzzle passed
-
-    # TODO: open video of landing
-
     # stop countdown
     final_time = timeout - time.time()
+
+    # open video of landing (blocking)
+    os.system("omxplayer --no-osd " + landing + " --win '0 0 1080 960' > /dev/null")
 
     # tell user they passed!
     clearScreen()
     printOut('POD SAFELY LANDED')
     m, s = divmod(final_time, 60)
-    printOut('{:.0f} MINUTES {:.0f} SECONDS OF LIFE SUPPORT REMAINING'.format(m, s))
+    printOut('{:.0f} MINUTES {} SECONDS OF LIFE SUPPORT REMAINING'.format(m, int(s)))
 
     # user presses numpad 'enter' to open bay door
     if not debug:
@@ -108,7 +115,7 @@ def main(debug=False):
 
     # TODO: open door electromagnets
 
-    # TODO: reset all puzzles + timer display
+    # TODO: reset all puzzles + timer display (do we even have one?)
 
     # Wait for user to leave
     time.sleep(5)

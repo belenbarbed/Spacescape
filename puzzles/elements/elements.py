@@ -47,7 +47,7 @@ def elementPuzzle(gametime, debug=False):
     printOut('ACCESS GRANTED')
     printOut('--- POD STATUS ---')
     m, s = divmod(gametime-time.time(), 60)
-    printOut('ENGINE STATUS:\tOK\nHYPERDRIVE:\tOFFLINE\nLIFE SUPPORT:\tLIMITED - {:.0f} MINUTES {:.0f} SECONDS REMAINING'.format(m, s))
+    printOut('ENGINE STATUS:\tOK\nHYPERDRIVE:\tOFFLINE\nLIFE SUPPORT:\tLIMITED - {:.0f} MINUTES {} SECONDS REMAINING'.format(m, int(s)))
 
     return 0
 

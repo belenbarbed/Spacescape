@@ -51,7 +51,7 @@ def main(debug=False):
     clearScreen()
 
     # open video of launch and crash (blocking)
-    os.system("omxplayer --no-osd " + crash + " --win '0 0 1080 960' > /dev/null")
+    os.system("omxplayer --no-osd " + start + " --win '0 0 1080 960' > /dev/null")
     printOut('SYSTEMS DAMAGED DUE TO ASTEROID COLLISION')
     
     # open video of traversing space (in parallel)

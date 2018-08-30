@@ -16,11 +16,9 @@ from utils.door.door import openDoor
 
 TIME = 5 # Game time in minutes
 
-# TODO: videos
 start = 'videos/start.mp4'
 journey = 'videos/journey.mp4'
-asteroids = '/opt/vc/src/hello_pi/hello_video/test.h264'
-landing = '/opt/vc/src/hello_pi/hello_video/test.h264'
+asteroids = 'videos/asteroids.mp4'
 
 # ^C handler
 def signal_handler(sig, frame):
@@ -68,7 +66,7 @@ def main(debug=False):
     elementPuzzle(timeout, debug)
     time.sleep(2)
 
-    # open video of asteroids approaching
+    # open video of asteroids approaching (in parallel)
     os.system("omxplayer --no-keys --no-osd -o local " + asteroids + " --win '0 0 1080 960' > /dev/null &")
 
     # 2nd PUZZLE: asteroid avoiding minigame (asteroids.py)
@@ -93,9 +91,6 @@ def main(debug=False):
 
     # stop countdown
     final_time = timeout - time.time()
-
-    # open video of landing (blocking)
-    os.system("omxplayer --no-osd " + landing + " --win '0 0 1080 960' > /dev/null")
 
     # tell user they passed!
     clearScreen()

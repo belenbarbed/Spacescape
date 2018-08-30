@@ -11,13 +11,14 @@ from puzzles.asteroids.asteroids import asteroidPuzzle
 from puzzles.elements.elements import elementPuzzle
 from puzzles.resistors.resistors import resistorPuzzle
 
-from utils import printOut, clearScreen, disableButton, disableKeys
+from common import printOut, clearScreen, disableButton, disableKeys
+from utils.door.door import closeDoor, openDoor
 
 TIME = 5 # Game time in minutes
 
 # TODO: videos
 start = '/opt/vc/src/hello_pi/hello_video/test.h264'
-journey = '/opt/vc/src/hello_pi/hello_video/test.h264'
+journey = 'videos/journey.mp4'
 crash = '/opt/vc/src/hello_pi/hello_video/test.h264'
 asteroids = '/opt/vc/src/hello_pi/hello_video/test.h264'
 landing = '/opt/vc/src/hello_pi/hello_video/test.h264'
@@ -33,7 +34,7 @@ def main(debug=False):
     clearScreen()
     if not debug:
         disableButton()
-        os.system("./numlock.sh")
+        os.system("./utils/numlock.sh")
 
     # open video of space in top of screen (in parallel)
     os.system("omxplayer --no-keys --no-osd -o local " + start + " --win '0 0 1080 960' > /dev/null &")
@@ -72,8 +73,6 @@ def main(debug=False):
 
     # open video of asteroids approaching
     os.system("omxplayer --no-keys --no-osd -o local " + asteroids + " --win '0 0 1080 960' > /dev/null &")
-    
-    # TODO: turn off main monitor
 
     # 2nd PUZZLE: asteroid avoiding minigame (asteroids.py)
     deaths = asteroidPuzzle(timeout, debug)
@@ -114,8 +113,6 @@ def main(debug=False):
     input('')
 
     # TODO: open door electromagnets
-
-    # TODO: reset all puzzles + timer display (do we even have one?)
 
     # Wait for user to leave
     time.sleep(5)

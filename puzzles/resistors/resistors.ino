@@ -27,6 +27,7 @@ void loop() {
             if(incoming == "reset") {
                 reset();
                 Serial.println("reset");
+                Serial.println("RESISTORS");
             } else if(lit == NUM_RESISTORS) {
                 int led = incoming.toInt();
                 leds[led*2] = CRGB::Green;

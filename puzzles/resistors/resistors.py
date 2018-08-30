@@ -32,17 +32,9 @@ def resistorPuzzle(gametime, debug=False):
 
     global ser
 
-    # for raspberry pi (as found from ls /dev/tty/ACM*)
-    ser = serial.Serial("/dev/ttyUSB0", baudrate=9600, timeout=0.1)
-    # for MAC only:
-    #ser = serial.Serial("/dev/tty.usbmodemFB0001", baudrate=9600, timeout=0.1)
-
-    # need sleep here to set up serial (mac = 2, pi = 0.6)
-    ser.write(b'reset\n')
-    read_ser = ser.readline()
-    while read_ser != b'reset\r\n':
-        ser.write(b'reset\n')
-        read_ser = ser.readline()
+    if !tryConnect('/dev/ttyUSB0', b'RESISTORS\r\n'):
+        if !tryConnect('/dev/ttyUSB1', b'RESISTORS\r\n'):
+            return
 
     # pick 2 random resistors
     resistor1 = random.randint(0,NUM_RESISTORS-1)
@@ -120,6 +112,22 @@ def resistorPuzzle(gametime, debug=False):
     printOut('ENGINE STATUS:\tOK\nHYPERDRIVE:\tONLINE\nLIFE SUPPORT:\tLIMITED - {:.0f} MINUTES {} SECONDS REMAINING'.format(m, int(s)))
 
     ser.close()
+
+def tryConnect(board, word):
+    global ser
+
+    ser = serial.Serial(board, baudrate=9600, timeout=0.1)
+    ser.write(b'reset\n')
+    read_ser = ser.readline()
+    while read_ser != b'reset\r\n':
+        ser.write(b'reset\n')
+        read_ser = ser.readline()
+
+    # Arduino connected, is it right one?
+    if ser.readline() == word:
+        return True
+
+    return False
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='The resistor puzzle.')

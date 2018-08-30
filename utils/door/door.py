@@ -11,15 +11,18 @@ def signal_handler(sig, frame):
 # openDoor(true) opens
 # openDoor(false) closes
 def openDoor(open, debug=False):
+    global ser
+
     # connect to Arduino
-    if tryConnect('/dev/ttyUSB0', b'RELAY\r\n'):
-        ser.write(b'openDoor\n') if open else ser.write(b'closeDoor\n')
-        return
-    elif tryConnect('/dev/ttyUSB1', b'RELAY\r\n'):
-        ser.write(b'openDoor\n') if open else ser.write(b'closeDoor\n')
-        return
+    if !tryConnect('/dev/ttyUSB0', b'RESISTORS\r\n'):
+        if !tryConnect('/dev/ttyUSB1', b'RESISTORS\r\n'):
+            return
+
+    ser.write(b'openDoor\n') if open else ser.write(b'closeDoor\n')
 
 def tryConnect(board, word):
+    global ser
+
     ser = serial.Serial(board, baudrate=9600, timeout=0.1)
     ser.write(b'reset\n')
     read_ser = ser.readline()

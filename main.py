@@ -12,14 +12,13 @@ from puzzles.elements.elements import elementPuzzle
 from puzzles.resistors.resistors import resistorPuzzle
 
 from common import printOut, clearScreen, disableButton, disableKeys
-from utils.door.door import closeDoor, openDoor
+from utils.door.door import openDoor
 
 TIME = 5 # Game time in minutes
 
 # TODO: videos
-start = '/opt/vc/src/hello_pi/hello_video/test.h264'
+start = 'videos/start.mp4'
 journey = 'videos/journey.mp4'
-crash = '/opt/vc/src/hello_pi/hello_video/test.h264'
 asteroids = '/opt/vc/src/hello_pi/hello_video/test.h264'
 landing = '/opt/vc/src/hello_pi/hello_video/test.h264'
 
@@ -36,16 +35,14 @@ def main(debug=False):
         disableButton()
         os.system("./utils/numlock.sh")
 
-    # open video of space in top of screen (in parallel)
-    os.system("omxplayer --no-keys --no-osd -o local " + start + " --win '0 0 1080 960' > /dev/null &")
-
     # user settles down and presses numpad 'enter' to start
     input('PRESS ENTER TO LAUNCH')
     if not debug:
         disableKeys()
     time.sleep(1)
 
-    # TODO: close door electromagnets
+    # close door electromagnets
+    openDoor(False)
 
     clearScreen()
     printOut('--- WELCOME ON BOARD ---')
@@ -53,7 +50,7 @@ def main(debug=False):
     time.sleep(2)
     clearScreen()
 
-    # open video of escape and crash (blocking)
+    # open video of launch and crash (blocking)
     os.system("omxplayer --no-osd " + crash + " --win '0 0 1080 960' > /dev/null")
     printOut('SYSTEMS DAMAGED DUE TO ASTEROID COLLISION')
     
@@ -112,7 +109,8 @@ def main(debug=False):
     printOut('--- PRESS ENTER TO OPEN POD DOOR ---')
     input('')
 
-    # TODO: open door electromagnets
+    # open door electromagnets
+    openDoor(True)
 
     # Wait for user to leave
     time.sleep(5)

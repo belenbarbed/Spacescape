@@ -1,5 +1,6 @@
 import serial
 import signal, sys
+import argparse
 
 ser = None
 
@@ -15,7 +16,7 @@ def openDoor(open, debug=False):
     if tryConnect('/dev/ttyUSB0', b'RELAY\r\n'):
         ser.write(b'openDoor\n') if open else ser.write(b'closeDoor\n')
         return
-    elif tryConnect('/dev/ttyUSB1', b'RELAY\r\n'):
+    elif tryConnect('/dev/ttyACM0', b'RELAY\r\n'):
         ser.write(b'openDoor\n') if open else ser.write(b'closeDoor\n')
         return
 

@@ -21,7 +21,8 @@ def elementPuzzle(gametime, debug=False):
     # word to use for code
     word = words[random.randint(0, len(words)-1)]
     printOut('--- ACCESS POD MAINFRAME ---')
-    print('User: ' + word.upper())
+    #print('User: ' + word.upper())
+    print('User: ' + word)
 
     elements = re.findall(r'([A-Z][a-z]*)', word)
 

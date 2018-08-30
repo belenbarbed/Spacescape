@@ -1,6 +1,8 @@
 import argparse
 import time
 import signal, sys
+from subprocess import call
+import os
 
 # puzzles
 from puzzles.asteroids.asteroids import asteroidPuzzle
@@ -24,6 +26,7 @@ def main(debug=False):
         disableButton()
 
     # TODO: open video of space in top of screen
+    os.system("omxplayer --no-keys --no-osd -o local /opt/vc/src/hello_pi/hello_video/test.h264 --win '0 0 1080 960' > /dev/null &")
 
     # user settles down and presses numpad 'enter' to start
     input('PRESS ENTER TO LAUNCH')
@@ -37,9 +40,10 @@ def main(debug=False):
     clearScreen()
 
     # TODO: open video of escape and crash
+    os.system("omxplayer --no-osd /opt/vc/src/hello_pi/hello_video/test.h264 --win '0 0 1080 960' > /dev/null")
     printOut('SYSTEMS DAMAGED DUE TO ASTEROID COLLISION')
 
-    # TODO: start countdown
+    # start countdown
     timeout = time.time() + (TIME * 60)
     m, s = divmod(timeout-time.time(), 60)
     printOut('LIFE SUPPORT DAMAGED: {:.0f} MINUTES {:.0f} SECONDS REMAINING'.format(m, s))
@@ -83,10 +87,10 @@ def main(debug=False):
 
     # TODO: open video of landing
 
-    # TODO: stop countdown
+    # stop countdown
     final_time = timeout - time.time()
 
-    # TODO: tell user they passed!
+    # tell user they passed!
     clearScreen()
     printOut('POD SAFELY LANDED')
     m, s = divmod(final_time, 60)

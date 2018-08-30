@@ -42,6 +42,9 @@ def main(debug=False):
     # TODO: open video of escape and crash
     os.system("omxplayer --no-osd /opt/vc/src/hello_pi/hello_video/test.h264 --win '0 0 1080 960' > /dev/null")
     printOut('SYSTEMS DAMAGED DUE TO ASTEROID COLLISION')
+    
+    # TODO: open video of traversing space
+    os.system("omxplayer --no-keys --no-osd -o local /opt/vc/src/hello_pi/hello_video/test.h264 --win '0 0 1080 960' > /dev/null &")
 
     # start countdown
     timeout = time.time() + (TIME * 60)
@@ -49,8 +52,6 @@ def main(debug=False):
     printOut('LIFE SUPPORT DAMAGED: {:.0f} MINUTES {:.0f} SECONDS REMAINING'.format(m, s))
     printOut('PLEASE FOLLOW INSTRUCTIONS TO ENSURE SURVIVAL')
     time.sleep(2)
-
-    # TODO: open video of traversing space
 
     # 1st PUZZLE: login (elements.py)
     elementPuzzle(timeout, debug)

@@ -16,9 +16,11 @@ from utils.door.door import openDoor
 
 TIME = 5 # Game time in minutes
 
-start = 'videos/start.mp4'
+start = 'videos/start1.mp4'
+static = 'videos/static.mp4'
 journey = 'videos/journey.mp4'
-asteroids = 'videos/asteroids.mp4'
+asteroids = 'videos/asteroids_short.mp4'
+landing = 'videos/landing.mp4'
 
 # ^C handler
 def signal_handler(sig, frame):
@@ -52,8 +54,8 @@ def main(debug=False):
     os.system("omxplayer --no-osd " + start + " --win '0 0 1080 960' > /dev/null")
     printOut('SYSTEMS DAMAGED DUE TO ASTEROID COLLISION')
     
-    # open video of traversing space (in parallel)
-    os.system("omxplayer --no-keys --no-osd -o local " + journey + " --win '0 0 1080 960' > /dev/null &")
+    # open video of static space (in parallel)
+    os.system("omxplayer --no-keys --no-osd -o local " + static + " --win '0 0 1080 960' > /dev/null &")
 
     # start countdown
     timeout = time.time() + (TIME * 60)
@@ -62,12 +64,15 @@ def main(debug=False):
     printOut('PLEASE FOLLOW INSTRUCTIONS TO ENSURE SURVIVAL')
     time.sleep(2)
 
+    # open video of traversing space (in parallel)
+    os.system("omxplayer --no-keys --no-osd -o local " + journey + " --win '0 0 1080 960' > /dev/null &")
+    
     # 1st PUZZLE: login (elements.py)
     elementPuzzle(timeout, debug)
     time.sleep(2)
 
     # open video of asteroids approaching (in parallel)
-    os.system("omxplayer --no-keys --no-osd -o local " + asteroids + " --win '0 0 1080 960' > /dev/null &")
+    os.system("omxplayer --no-osd " + asteroids + " --win '0 0 1080 960' > /dev/null &")
 
     # 2nd PUZZLE: asteroid avoiding minigame (asteroids.py)
     deaths = asteroidPuzzle(timeout, debug)
@@ -88,6 +93,9 @@ def main(debug=False):
     # 3rd PUZZLE: repair codes (resistors.py)
     resistorPuzzle(timeout, debug)
     time.sleep(2)
+
+    # open video of landing (in parallel)
+    os.system("omxplayer --no-keys --no-osd -o local " + landing + " --win '0 0 1080 960' > /dev/null &")
 
     # stop countdown
     final_time = timeout - time.time()

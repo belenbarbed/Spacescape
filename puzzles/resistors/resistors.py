@@ -107,7 +107,7 @@ def resistorPuzzle(gametime, debug=False):
         time.sleep(0.5)
     printOut(' COMPLETE!')
 
-    printOut('--- POD STATUS ---')
+    printOut('\n\n--- POD STATUS ---')
     m, s = divmod(gametime-time.time(), 60)
     printOut('ENGINE STATUS:\tOK\nHYPERDRIVE:\tONLINE\nLIFE SUPPORT:\tLIMITED - {:.0f} MINUTES {} SECONDS REMAINING'.format(m, int(s)))
 

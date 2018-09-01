@@ -109,7 +109,7 @@ def resistorPuzzle(gametime, debug=False):
 
     printOut('\n\n--- POD STATUS ---')
     m, s = divmod(gametime-time.time(), 60)
-    printOut('ENGINE STATUS:\tOK\nHYPERDRIVE:\tONLINE\nLIFE SUPPORT:\tLIMITED - {:.0f} MINUTES {} SECONDS REMAINING'.format(m, int(s)))
+    printOut('ENGINE STATUS:\tOK\nHYPERDRIVE:\tONLINE\nLIFE SUPPORT:\tLIMITED - {:.0f} MINUTE{} {} SECONDS REMAINING'.format(m, 'S' if m >= 2.0 else '', int(s)))
 
     ser.close()
 

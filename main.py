@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 
 import argparse
+import curses
 import time
 import signal, sys
 from subprocess import call
@@ -43,28 +44,36 @@ def main(debug=False):
 
     # close door electromagnets
     openDoor(False)
-
+    
     clearScreen()
     printOut('--- WELCOME ON BOARD ---')
     printOut('POD NOW LAUNCHING...')
     time.sleep(2)
     clearScreen()
 
-    # open video of launch and crash (blocking)
-    os.system("omxplayer --no-osd " + start + " --win '0 0 1080 960' > /dev/null")
-    printOut('SYSTEMS DAMAGED DUE TO ASTEROID COLLISION')
+    if not debug:
+        # open video of launch and crash (blocking)
+        os.system("omxplayer --no-osd " + start + " --win '0 0 1080 960' > /dev/null")
     
     # open video of static space (in parallel)
     os.system("omxplayer --no-keys --no-osd -o local " + static + " --win '0 0 1080 960' > /dev/null &")
 
+    printOut('SYSTEMS DAMAGED DUE TO ASTEROID COLLISION')
+    time.sleep(2)
+    printOut('\nSYSTEMS REBOOTING')
+    for i in range(0, 5):
+        print('.', end='', flush=True)
+        time.sleep(1)
+
     # start countdown
     timeout = time.time() + (TIME * 60)
     m, s = divmod(timeout-time.time(), 60)
-    printOut('LIFE SUPPORT DAMAGED: {:.0f} MINUTES {} SECONDS REMAINING'.format(m, int(s)))
+    printOut('\n\n--- WARNING ---\nLIFE SUPPORT DAMAGED: {:.0f} MINUTES {} SECONDS REMAINING'.format(m, int(s)))
     printOut('PLEASE FOLLOW INSTRUCTIONS TO ENSURE SURVIVAL')
     time.sleep(2)
 
     # open video of traversing space (in parallel)
+    os.system("killall -s SIGINT omxplayer.bin")
     os.system("omxplayer --no-keys --no-osd -o local " + journey + " --win '0 0 1080 960' > /dev/null &")
     
     # 1st PUZZLE: login (elements.py)
@@ -72,6 +81,7 @@ def main(debug=False):
     time.sleep(2)
 
     # open video of asteroids approaching (in parallel)
+    os.system("killall -s SIGINT omxplayer.bin")
     os.system("omxplayer --no-osd " + asteroids + " --win '0 0 1080 960' > /dev/null &")
 
     # 2nd PUZZLE: asteroid avoiding minigame (asteroids.py)
@@ -82,9 +92,9 @@ def main(debug=False):
         timeout -= 10
         if deaths >= 2:
             timeout -= deaths * 5
-        printOut('LIFE SUPPORT DAMAGED BY ASTEROID COLLISION')
+        printOut('\n\n --- WARNING ---\nLIFE SUPPORT DAMAGED BY ASTEROID COLLISION')
         m, s = divmod(timeout-time.time(), 60)
-        printOut('{:.0f} MINUTES {} SECONDS REMAINING'.format(m, int(s)))
+        printOut('{:.0f} MINUTE{} {} SECONDS REMAINING'.format(m, 'S' if m >= 2.0 else '', int(s)))
     time.sleep(2)
 
     # open video of traversing space (in parallel)
@@ -95,6 +105,7 @@ def main(debug=False):
     time.sleep(2)
 
     # open video of landing (in parallel)
+    os.system("killall -s SIGINT omxplayer.bin")
     os.system("omxplayer --no-keys --no-osd -o local " + landing + " --win '0 0 1080 960' > /dev/null &")
 
     # stop countdown
@@ -104,12 +115,12 @@ def main(debug=False):
     clearScreen()
     printOut('POD SAFELY LANDED')
     m, s = divmod(final_time, 60)
-    printOut('{:.0f} MINUTES {} SECONDS OF LIFE SUPPORT REMAINING'.format(m, int(s)))
+    printOut('{:.0f} MINUTE{} {} SECONDS OF LIFE SUPPORT REMAINING'.format(m, 'S' if m >= 2.0 else '', int(s)))
 
     # user presses numpad 'enter' to open bay door
     if not debug:
         disableKeys(False)
-    printOut('--- PRESS ENTER TO OPEN POD DOOR ---')
+    printOut('\n\nTHANKS FOR PLAYING!\n\n--- PRESS ENTER TO OPEN POD DOOR ---')
     input('')
 
     # open door electromagnets

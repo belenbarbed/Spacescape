@@ -12,11 +12,12 @@ sys.path.insert(0, current_dir[:current_dir.rfind(path.sep)])
 from common import printOut, clearScreen, disableButton
 sys.path.pop(0)
 
-HEIGHT = 20
-WIDTH = 80
+HEIGHT = 24
+WIDTH = 77
 TIMEOUT = 50
 SPEED = 1.0
 RATE = 0.70
+NUM_ASTEROIDS = 3
 
 def sig_handler(sig, frame):
     curses.endwin()
@@ -90,7 +91,7 @@ def asteroidPuzzle(gametime, debug=False):
     clearScreen()
 
     printOut('--- WARNING! ---\nESCAPE POD NOW ENTERING HIGHLY DENSE ASTEROID FIELD')
-    printOut('MAIN MONITOR DISABLED TO CONSERVE POWER FOR EVASIVE MANEUVERS\nMANUAL NAVIGATION REQUIRED')
+    printOut('MAIN MONITOR WILL BE DISABLED TO CONSERVE POWER FOR EVASIVE MANEUVERS\nMANUAL NAVIGATION REQUIRED')
     printOut('ENTERING FIELD IN')
     for i in [3, 2, 1]:
         print(i)
@@ -154,10 +155,9 @@ def asteroidPuzzle(gametime, debug=False):
 
         if time.time() > interval + speed:
             win.addch(player.y, player.x, player.getIcon())
-            first = Asteroid()
-            asteroids.append(first)
-            second = Asteroid()
-            asteroids.append(second)
+            for i in range(0, NUM_ASTEROIDS):
+                first = Asteroid()
+                asteroids.append(first)
             for asteroid in asteroids:
                 asteroid.fall()
                 if asteroid.exist:
@@ -182,7 +182,7 @@ def asteroidPuzzle(gametime, debug=False):
     printOut('POD WAS HIT {} TIME{}'.format(player.deaths(), '' if player.deaths()==1 else 'S'))
     printOut('\n\n--- POD STATUS ---')
     m, s = divmod(gametime-time.time(), 60)
-    printOut('ENGINE STATUS:\tOK\nHYPERDRIVE:\tOFFLINE\nLIFE SUPPORT:\tLIMITED - {:.0f} MINUTES {} SECONDS REMAINING'.format(m, int(s)))
+    printOut('ENGINE STATUS:\tOK\nHYPERDRIVE:\tOFFLINE\nLIFE SUPPORT:\tLIMITED - {:.0f} MINUTE{} {} SECONDS REMAINING'.format(m, 'S' if m >= 2.0 else '', int(s)))
 
     return player.deaths()
 

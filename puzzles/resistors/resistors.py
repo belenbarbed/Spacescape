@@ -73,7 +73,7 @@ def resistorPuzzle(gametime, debug=False):
         print('.', end='', flush=True)
         time.sleep(0.5)
     printOut(' AUTOMATIC REPAIR FAILED!')
-    printOut('MANUAL OVERRIDE REQUIRED')
+    printOut('MANUAL OVERRIDE REQUIRED\n\n')
 
     # Enable numpad
     if not debug:
@@ -88,6 +88,8 @@ def resistorPuzzle(gametime, debug=False):
     else:
         ser.write((str(resistor2)+'ok\n').encode())
     
+    printOut('\n')
+
     attempt = ''
     while attempt != remaining:
         attempt = input('ENTER ENGINE REPAIR CODE 2/2: ')

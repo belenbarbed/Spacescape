@@ -15,9 +15,13 @@ def openDoor(open, debug=False):
     global ser
 
     # connect to Arduino
-    if not tryConnect('/dev/ttyUSB0', b'RESISTORS\r\n'):
-        if not tryConnect('/dev/ttyACM0', b'RESISTORS\r\n'):
-            return
+    if not tryConnect('/dev/ttyUSB0', b'RELAY\r\n'):
+        try:
+            if not tryConnect('/dev/ttyACM1', b'RELAY\r\n'):
+                return
+        except:
+            if not tryConnect('/dev/ttyACM0', b'RELAY\r\n'):
+                return
 
     ser.write(b'openDoor\n') if open else ser.write(b'closeDoor\n')
 

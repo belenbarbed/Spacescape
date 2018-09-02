@@ -1,7 +1,7 @@
 from random import randint
 import curses
 import time
-import sys, signal
+import sys, signal, os
 import argparse
 import pygame
 
@@ -16,7 +16,7 @@ HEIGHT = 24
 WIDTH = 77
 TIMEOUT = 50
 SPEED = 1.0
-RATE = 0.70
+RATE = 0.73
 NUM_ASTEROIDS = 3
 
 def sig_handler(sig, frame):
@@ -96,6 +96,8 @@ def asteroidPuzzle(gametime, debug=False):
     for i in [3, 2, 1]:
         print(i)
         time.sleep(1)
+
+    os.system("killall -s SIGINT omxplayer.bin")
     
     clearScreen()
     pygame.mixer.music.load('puzzles/asteroids/moon.wav')

@@ -15,13 +15,11 @@ from puzzles.resistors.resistors import resistorPuzzle
 from common import printOut, clearScreen, disableButton, disableKeys
 from utils.door.door import openDoor
 
-TIME = 5 # Game time in minutes
-
-start = 'videos/start1.mp4'
+start = 'videos/start2.mp4'
 static = 'videos/static.mp4'
 journey = 'videos/journey.mp4'
-asteroids = 'videos/asteroids_short.mp4'
-landing = 'videos/landing.mp4'
+asteroids = 'videos/asteroids.mp4'
+landing = 'videos/landing1.mp4'
 
 # ^C handler
 def signal_handler(sig, frame):
@@ -30,12 +28,13 @@ def signal_handler(sig, frame):
 signal.signal(signal.SIGINT, signal_handler)
 
 # main function
-def main(debug=False):
-    clearScreen()
+def main(debug=False, gametime=10.0):
     if not debug:
         disableButton()
         os.system("./utils/numlock.sh")
-
+    
+    clearScreen()
+    
     # user settles down and presses numpad 'enter' to start
     input('PRESS ENTER TO LAUNCH')
     if not debug:
@@ -53,7 +52,7 @@ def main(debug=False):
 
     if not debug:
         # open video of launch and crash (blocking)
-        os.system("omxplayer --no-osd " + start + " --win '0 0 1080 960' > /dev/null")
+        os.system("omxplayer --no-keys --no-osd -o local " + start + " --win '0 0 1080 960' > /dev/null")
     
     # open video of static space (in parallel)
     os.system("omxplayer --no-keys --no-osd -o local " + static + " --win '0 0 1080 960' > /dev/null &")
@@ -66,7 +65,7 @@ def main(debug=False):
         time.sleep(1)
 
     # start countdown
-    timeout = time.time() + (TIME * 60)
+    timeout = time.time() + (gametime * 60)
     m, s = divmod(timeout-time.time(), 60)
     printOut('\n\n--- WARNING ---\nLIFE SUPPORT DAMAGED: {:.0f} MINUTES {} SECONDS REMAINING'.format(m, int(s)))
     printOut('PLEASE FOLLOW INSTRUCTIONS TO ENSURE SURVIVAL')
@@ -82,10 +81,13 @@ def main(debug=False):
 
     # open video of asteroids approaching (in parallel)
     os.system("killall -s SIGINT omxplayer.bin")
-    os.system("omxplayer --no-osd " + asteroids + " --win '0 0 1080 960' > /dev/null &")
+    os.system("omxplayer --no-keys --no-osd -o local " + asteroids + " --win '0 0 1080 960' > /dev/null &")
 
     # 2nd PUZZLE: asteroid avoiding minigame (asteroids.py)
     deaths = asteroidPuzzle(timeout, debug)
+
+    # open video of static space (in parallel)
+    os.system("omxplayer --no-keys --no-osd -o local " + static + " --win '0 0 1080 960' > /dev/null &")
 
     # discount time depending on no. of deaths
     if deaths >= 1:
@@ -97,11 +99,10 @@ def main(debug=False):
         printOut('{:.0f} MINUTE{} {} SECONDS REMAINING'.format(m, 'S' if m >= 2.0 else '', int(s)))
     time.sleep(2)
 
-    # open video of traversing space (in parallel)
-    os.system("omxplayer --no-keys --no-osd -o local " + journey + " --win '0 0 1080 960' > /dev/null &")
-
     # 3rd PUZZLE: repair codes (resistors.py)
     resistorPuzzle(timeout, debug)
+    os.system("killall -s SIGINT omxplayer.bin")
+    os.system("omxplayer --no-keys --no-osd -o local " + journey + " --win '0 0 1080 960' > /dev/null &")
     time.sleep(2)
 
     # open video of landing (in parallel)
@@ -114,27 +115,29 @@ def main(debug=False):
     # tell user they passed!
     clearScreen()
     printOut('POD SAFELY LANDED')
-    m, s = divmod(final_time, 60)
-    printOut('{:.0f} MINUTE{} {} SECONDS OF LIFE SUPPORT REMAINING'.format(m, 'S' if m >= 2.0 else '', int(s)))
 
     # user presses numpad 'enter' to open bay door
     if not debug:
         disableKeys(False)
-    printOut('\n\nTHANKS FOR PLAYING!\n\n--- PRESS ENTER TO OPEN POD DOOR ---')
+    printOut('\n\nTHANKS FOR PLAYING!\n\n')
+    m, s = divmod(final_time, 60)
+    printOut('{}YOU FINISHED WITH {:.0f} MINUTE{} {} SECONDS {}.'.format('CONGRATULATIONS! ' if final_time >= 0 else '', m, 'S' if m >= 2.0 else '', int(s), 'REMAINING' if final_time >= 0 else 'OVERTIME'))
+    printOut('\n\n--- PRESS ENTER TO OPEN POD DOOR ---')
     input('')
 
     # open door electromagnets
     openDoor(True)
 
     # Wait for user to leave
-    time.sleep(5)
-    sys.exit(0)
+    time.sleep(10)
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Master script for puzzles and screen mgmt')
     parser.add_argument('-d', '--debug', default=False, action='store_true', dest='debug',
         help='enable debug mode')
+    parser.add_argument('-t', '--time', default=10.0, type=int, dest='time', help='set game time')
     args = parser.parse_args()
 
-    main(debug=args.debug)
+    while True:
+        main(debug=args.debug, gametime=args.time)

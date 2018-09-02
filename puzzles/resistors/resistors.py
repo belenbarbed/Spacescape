@@ -30,6 +30,9 @@ signal.signal(signal.SIGINT, signal_handler)
 def resistorPuzzle(gametime, debug=False):
     clearScreen()
 
+    if not debug:
+        disableKeys()
+
     global ser
 
     if not tryConnect('/dev/ttyUSB0', b'RESISTORS\r\n'):
@@ -79,21 +82,21 @@ def resistorPuzzle(gametime, debug=False):
     if not debug:
         disableKeys(False)
 
-    attempt = ''
-    while attempt != code1 and attempt != code2:
+    attempt = '0'
+    while int(attempt) != int(code1) and int(attempt) != int(code2):
         attempt = input('ENTER ENGINE REPAIR CODE 1/2: ')
-    remaining = code2 if attempt == code1 else code1
-    if attempt == code1:
+    remaining = code2 if int(attempt) == int(code1) else code1
+    if int(attempt) == int(code1):
         ser.write((str(resistor1)+'ok\n').encode())
     else:
         ser.write((str(resistor2)+'ok\n').encode())
     
     printOut('\n')
 
-    attempt = ''
-    while attempt != remaining:
+    attempt = '0'
+    while int(attempt) != int(remaining):
         attempt = input('ENTER ENGINE REPAIR CODE 2/2: ')
-    if attempt == code1:
+    if int(attempt) == int(code1):
         ser.write((str(resistor1)+'ok\n').encode())
     else:
         ser.write((str(resistor2)+'ok\n').encode())

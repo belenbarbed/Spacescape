@@ -3,7 +3,7 @@ import os
 import subprocess
 
 DELAY = 0.05
-DEVICE_ID = '8'
+DEVICE_ID = '9'
 
 def printOut(message):
     for char in message:

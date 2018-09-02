@@ -11,7 +11,7 @@ def signal_handler(sig, frame):
 
 # openDoor(true) opens
 # openDoor(false) closes
-def openDoor(open, debug=False):
+def openDoor(open=True, debug=False):
     global ser
 
     # connect to Arduino

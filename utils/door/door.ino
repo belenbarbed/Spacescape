@@ -5,11 +5,10 @@ String incoming = "";
 const int DOOR = 13;
 
 void setup() {
-    reset();
     Serial.begin(9600);
     Serial.setTimeout(50);
-
     pinMode(DOOR, OUTPUT);
+    reset();
 }
 
 void loop() {

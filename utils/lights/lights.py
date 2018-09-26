@@ -9,22 +9,30 @@ def signal_handler(sig, frame):
     ser.close()
     sys.exit(0)
 
-# openDoor(true) opens
-# openDoor(false) closes
-def openDoor(open=True, debug=False):
+# lights('fade') fades
+# lights('dim') dims
+# lights('flash') flashes
+def lights(cmd='fade', debug=False):
     global ser
 
     # connect to Arduino
-    if not tryConnect('/dev/ttyUSB1', b'RELAY\r\n'):
-        if not tryConnect('/dev/ttyUSB0', b'RELAY\r\n'):
+    if not tryConnect('/dev/ttyUSB1', b'LIGHTS\r\n'):
+        if not tryConnect('/dev/ttyUSB0', b'LIGHTS\r\n'):
             try:
-                if not tryConnect('/dev/ttyACM1', b'RELAY\r\n'):
+                if not tryConnect('/dev/ttyACM1', b'LIGHTS\r\n'):
                     return
-            except:
-                if not tryConnect('/dev/ttyACM0', b'RELAY\r\n'):
+            except:    
+                if not tryConnect('/dev/ttyACM0', b'LIGHTS\r\n'):
                     return
 
-    ser.write(b'openDoor\n') if open else ser.write(b'closeDoor\n')
+    if cmd == 'fade':
+        ser.write(b'fade\n')
+    elif cmd == 'dim':
+        ser.write(b'dim\n')
+    elif cmd == 'flash':
+        ser.write(b'flash\n')
+    else:
+        ser.write(b'reset\n')
 
 def tryConnect(board, word):
     global ser

@@ -3,7 +3,6 @@ import os
 import subprocess
 
 DELAY = 0.05
-DEVICE_ID = '9'
 
 def printOut(message):
     for char in message:
@@ -22,6 +21,6 @@ def disableButton(true=True):
 
 def disableKeys(true=True):
     if true:
-        subprocess.call(['xinput', 'disable', DEVICE_ID])
+        subprocess.call(['/home/pi/Spacescape/utils/toggle_keypad.sh', 'disable'])
     else:
-        subprocess.call(['xinput', 'enable', DEVICE_ID])
+        subprocess.call(['/home/pi/Spacescape/utils/toggle_keypad.sh', 'enable'])

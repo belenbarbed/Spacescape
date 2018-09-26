@@ -14,6 +14,7 @@ from puzzles.resistors.resistors import resistorPuzzle
 
 from common import printOut, clearScreen, disableButton, disableKeys
 from utils.door.door import openDoor
+from utils.lights.lights import lights
 
 start = 'videos/start2.mp4'
 static = 'videos/static.mp4'
@@ -49,10 +50,17 @@ def main(debug=False, gametime=10.0):
     printOut('POD NOW LAUNCHING...')
     time.sleep(2)
     clearScreen()
+    lights('dim')
 
     if not debug:
         # open video of launch and crash (blocking)
-        os.system("omxplayer --no-keys --no-osd -o local " + start + " --win '0 0 1080 960' > /dev/null")
+        os.system("omxplayer --no-keys --no-osd -o local " + start + " --win '0 0 1080 960' > /dev/null &")
+        time.sleep(28)
+        lights('flash')
+        lights('dim')
+        time.sleep(2)
+
+    lights('fade')
     
     # open video of static space (in parallel)
     os.system("omxplayer --no-keys --no-osd -o local " + static + " --win '0 0 1080 960' > /dev/null &")
@@ -105,6 +113,7 @@ def main(debug=False, gametime=10.0):
     os.system("omxplayer --no-keys --no-osd -o local " + journey + " --win '0 0 1080 960' > /dev/null &")
     time.sleep(2)
 
+    lights('dim')
     # open video of landing (in parallel)
     os.system("killall -s SIGINT omxplayer.bin")
     os.system("omxplayer --no-keys --no-osd -o local " + landing + " --win '0 0 1080 960' > /dev/null &")
@@ -115,6 +124,7 @@ def main(debug=False, gametime=10.0):
     # tell user they passed!
     clearScreen()
     printOut('POD SAFELY LANDED')
+    lights('fade')
 
     # user presses numpad 'enter' to open bay door
     if not debug:

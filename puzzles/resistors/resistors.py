@@ -34,10 +34,15 @@ def resistorPuzzle(gametime, debug=False):
         disableKeys()
 
     global ser
-
-    if not tryConnect('/dev/ttyUSB0', b'RESISTORS\r\n'):
-        if not tryConnect('/dev/ttyACM0', b'RESISTORS\r\n'):
-            return
+    
+    if not tryConnect('/dev/ttyUSB1', b'RESISTORS\r\n'):
+        if not tryConnect('/dev/ttyUSB0', b'RESISTORS\r\n'):
+            try:
+                if not tryConnect('/dev/ttyACM1', b'RESISTORS\r\n'):
+                    return
+            except:
+                if not tryConnect('/dev/ttyACM0', b'RESISTORS\r\n'):
+                    return
 
     # pick 2 random resistors
     resistor1 = random.randint(0,NUM_RESISTORS-1)

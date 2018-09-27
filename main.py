@@ -35,15 +35,21 @@ def main(debug=False, gametime=10.0):
         os.system("./utils/numlock.sh")
     
     clearScreen()
+    hint_count = 0
     
     # user settles down and presses numpad 'enter' to start
-    input('PRESS ENTER TO LAUNCH')
+    print('--- WARNING ---\n\n')
+    print('ESCAPE POD USERS MUST RESPECT THE FOLLOWING RULES:\n- NO FOOD OR DRINKS INSIDE THE POD\n- BE GENTLE WITH POD FEATURES\n- ESCAPE POD FITS ONE PERSON ONLY')
+    print('\nIN CASE OF EMERGENCY PUSH POD DOOR OPEN')
+    input('\n\n--- PRESS ENTER TO LAUNCH ---')
     if not debug:
         disableKeys()
     time.sleep(1)
 
     # close door electromagnets
     openDoor(False)
+    printOut('PLEASE PULL DOOR CLOSED NOW')
+    time.sleep(2)
     
     clearScreen()
     printOut('--- WELCOME ON BOARD ---')
@@ -58,7 +64,7 @@ def main(debug=False, gametime=10.0):
         time.sleep(28)
         lights('flash')
         lights('dim')
-        time.sleep(2)
+        time.sleep(5)
 
     lights('fade')
     
@@ -84,15 +90,17 @@ def main(debug=False, gametime=10.0):
     os.system("omxplayer --no-keys --no-osd -o local " + journey + " --win '0 0 1080 960' > /dev/null &")
     
     # 1st PUZZLE: login (elements.py)
-    elementPuzzle(timeout, debug)
+    hint_count += elementPuzzle(timeout, debug)
     time.sleep(2)
 
     # open video of asteroids approaching (in parallel)
     os.system("killall -s SIGINT omxplayer.bin")
     os.system("omxplayer --no-keys --no-osd -o local " + asteroids + " --win '0 0 1080 960' > /dev/null &")
+    lights('dim')
 
     # 2nd PUZZLE: asteroid avoiding minigame (asteroids.py)
     deaths = asteroidPuzzle(timeout, debug)
+    lights('fade')
 
     # open video of static space (in parallel)
     os.system("omxplayer --no-keys --no-osd -o local " + static + " --win '0 0 1080 960' > /dev/null &")
@@ -108,7 +116,7 @@ def main(debug=False, gametime=10.0):
     time.sleep(2)
 
     # 3rd PUZZLE: repair codes (resistors.py)
-    resistorPuzzle(timeout, debug)
+    hint_count += resistorPuzzle(timeout, debug)
     os.system("killall -s SIGINT omxplayer.bin")
     os.system("omxplayer --no-keys --no-osd -o local " + journey + " --win '0 0 1080 960' > /dev/null &")
     time.sleep(2)
@@ -123,15 +131,17 @@ def main(debug=False, gametime=10.0):
 
     # tell user they passed!
     clearScreen()
-    printOut('POD SAFELY LANDED')
+    time.sleep(30)
     lights('fade')
+    printOut('POD SAFELY LANDED')
 
     # user presses numpad 'enter' to open bay door
     if not debug:
         disableKeys(False)
-    printOut('\n\nTHANKS FOR PLAYING!\n\n')
+    printOut('\n\n--- THANKS FOR PLAYING! ---\n\n')
     m, s = divmod(final_time, 60)
     printOut('{}YOU FINISHED WITH {:.0f} MINUTE{} {} SECONDS {}.'.format('CONGRATULATIONS! ' if final_time >= 0 else '', m, 'S' if m >= 2.0 else '', int(s), 'REMAINING' if final_time >= 0 else 'OVERTIME'))
+    printOut('\nTOTAL HINTS USED:\t{}\nASTEROID COLLISIONS:\t{}'.format(hint_count, deaths))
     printOut('\n\n--- PRESS ENTER TO OPEN POD DOOR ---')
     input('')
 

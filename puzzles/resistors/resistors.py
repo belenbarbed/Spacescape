@@ -27,8 +27,26 @@ def signal_handler(sig, frame):
 
 signal.signal(signal.SIGINT, signal_handler)
 
+
+HINTS = {
+            1: "THERE IS A CLUE TO THE RIGHT, BELOW THE DESK.",
+            2: "THERE IS A PANEL TO YOUR BACK LEFT, THE PUZZLE CAN BE FOUND INSIDE.",
+            3: "THE REPAIR CODES ARE RELATED TO THE RESISTORS WITH RED WARNING LIGHTS.",
+            4: "CONVERT THE RESISTOR INTO ITS RESISTANCE USING THE RESISTOR COLOUR CHART.\nDO THIS FOR BOTH RESISTORS TO GET THE TWO REPAIR CODES."
+        }
+
+def hint(counter):
+    accept = input('YOU HAVE REQUESTED A HINT, ARE YOU SURE?\nPRESS * AND ENTER TO ACCEPT\nPRESS ENTER TO REJECT\n')
+    if accept == '*':
+        if counter < 4:
+            counter += 1
+        print(HINTS[counter])
+    return counter
+
+
 def resistorPuzzle(gametime, debug=False):
     clearScreen()
+    hint_count = 0
 
     if not debug:
         disableKeys()
@@ -90,6 +108,12 @@ def resistorPuzzle(gametime, debug=False):
     attempt = '0'
     while int(attempt) != int(code1) and int(attempt) != int(code2):
         attempt = input('ENTER ENGINE REPAIR CODE 1/2: ')
+        if attempt == '*':
+            hint_count = hint(hint_count)
+        try:
+            int(attempt)
+        except ValueError:
+            attempt = '0'
     remaining = code2 if int(attempt) == int(code1) else code1
     if int(attempt) == int(code1):
         ser.write((str(resistor1)+'ok\n').encode())
@@ -101,6 +125,12 @@ def resistorPuzzle(gametime, debug=False):
     attempt = '0'
     while int(attempt) != int(remaining):
         attempt = input('ENTER ENGINE REPAIR CODE 2/2: ')
+        if attempt == '*':
+            hint_count = hint(hint_count)
+        try:
+            int(attempt)
+        except ValueError:
+            attempt = '0'
     if int(attempt) == int(code1):
         ser.write((str(resistor1)+'ok\n').encode())
     else:
@@ -119,9 +149,11 @@ def resistorPuzzle(gametime, debug=False):
 
     printOut('\n\n--- POD STATUS ---')
     m, s = divmod(gametime-time.time(), 60)
-    printOut('ENGINE STATUS:\tOK\nHYPERDRIVE:\tONLINE\nLIFE SUPPORT:\tLIMITED - {:.0f} MINUTE{} {} SECONDS REMAINING'.format(m, 'S' if m >= 2.0 else '', int(s)))
+    printOut('ENGINE STATUS:\tOK\nHYPERDRIVE:\tONLINE\nLIFE SUPPORT:\tLIMITED - {:.0f} MINUTE{} {} SECONDS REMAINING\nHINTS USED:\t{}'.format(m, 'S' if m >= 2.0 else '', int(s), hint_count))
 
     ser.close()
+
+    return hint_count
 
 def tryConnect(board, word):
     global ser

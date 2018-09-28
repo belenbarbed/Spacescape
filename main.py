@@ -38,7 +38,7 @@ def main(debug=False, gametime=10.0):
     hint_count = 0
     
     # user settles down and presses numpad 'enter' to start
-    print('--- WARNING ---\n\n')
+    print('--- WARNING ---\nPLEASE READ BEFORE LAUNCHING\n\n')
     print('ESCAPE POD USERS MUST RESPECT THE FOLLOWING RULES:\n- NO FOOD OR DRINKS INSIDE THE POD\n- BE GENTLE WITH POD FEATURES\n- ESCAPE POD FITS ONE PERSON ONLY')
     print('\nIN CASE OF EMERGENCY PUSH POD DOOR OPEN')
     input('\n\n--- PRESS ENTER TO LAUNCH ---')
@@ -53,8 +53,9 @@ def main(debug=False, gametime=10.0):
     
     clearScreen()
     printOut('--- WELCOME ON BOARD ---')
+    printOut("\nIF YOU REQUIRE A HINT DURING ANY OF THE PUZZLES, PRESS '*' FOLLOWED BY ENTER\n")
     printOut('POD NOW LAUNCHING...')
-    time.sleep(2)
+    time.sleep(5)
     clearScreen()
     lights('dim')
 

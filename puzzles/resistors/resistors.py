@@ -31,16 +31,18 @@ signal.signal(signal.SIGINT, signal_handler)
 HINTS = {
             1: "THERE IS A CLUE TO THE RIGHT, BELOW THE DESK.",
             2: "THERE IS A PANEL TO YOUR BACK LEFT, THE PUZZLE CAN BE FOUND INSIDE.",
-            3: "THE REPAIR CODES ARE RELATED TO THE RESISTORS WITH RED WARNING LIGHTS.",
-            4: "CONVERT THE RESISTOR INTO ITS RESISTANCE USING THE RESISTOR COLOUR CHART.\nDO THIS FOR BOTH RESISTORS TO GET THE TWO REPAIR CODES."
+            3: "THE REPAIR CODES ARE RELATED TO THE RESISTORS MARKED WITH RED WARNING LIGHTS.",
+            4: "CONVERT THE RESISTOR INTO ITS RESISTANCE USING THE RESISTOR COLOUR CHART.\nDO THIS FOR BOTH RESISTORS TO GET THE TWO REPAIR CODES.",
+            5: "FOR A RESISTOR WITH RED RED RED RED FROM TOP TO BOTTOM, THE RESISTANCE WOULD BE 2200 OHMS. IGNORE THE FOURTH COLOUR, AS THIS REPRESENTS RESISTANCE TOLERANCE. THE REPAIR CODE FOR THIS RESISTOR WOULD BE 2200",
         }
 
 def hint(counter):
     accept = input('YOU HAVE REQUESTED A HINT, ARE YOU SURE?\nPRESS * AND ENTER TO ACCEPT\nPRESS ENTER TO REJECT\n')
     if accept == '*':
-        if counter < 4:
+        if counter < 5:
             counter += 1
         print(HINTS[counter])
+        print()
     return counter
 
 
@@ -107,7 +109,7 @@ def resistorPuzzle(gametime, debug=False):
 
     attempt = '0'
     while int(attempt) != int(code1) and int(attempt) != int(code2):
-        attempt = input('ENTER ENGINE REPAIR CODE 1/2: ')
+        attempt = input('ENTER ENGINE REPAIR CODE 1 OF 2: ')
         if attempt == '*':
             hint_count = hint(hint_count)
         try:
@@ -124,7 +126,7 @@ def resistorPuzzle(gametime, debug=False):
 
     attempt = '0'
     while int(attempt) != int(remaining):
-        attempt = input('ENTER ENGINE REPAIR CODE 2/2: ')
+        attempt = input('ENTER ENGINE REPAIR CODE 2 OF 2: ')
         if attempt == '*':
             hint_count = hint(hint_count)
         try:

@@ -120,7 +120,11 @@ def main(debug=False, gametime=10.0):
     hint_count += resistorPuzzle(timeout, debug)
     os.system("killall -s SIGINT omxplayer.bin")
     os.system("omxplayer --no-keys --no-osd -o local " + journey + " --win '0 0 1080 960' > /dev/null &")
+    printOut('\n\nALL SYSTEMS GREEN FOR LANDING')
     time.sleep(2)
+    clearScreen()
+    printOut('--- WARNING ---\nPOD LANDING SEQUENCE ENGAGING...')
+    time.sleep(3)
 
     lights('dim')
     # open video of landing (in parallel)
